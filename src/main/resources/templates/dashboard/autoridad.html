@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Autoridad</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+<div class="min-h-screen flex">
+    <!-- Sidebar -->
+    <div class="bg-purple-800 text-white w-64 py-6 flex flex-col">
+        <div class="px-6 mb-8">
+            <h2 class="text-2xl font-bold">Panel Autoridad</h2>
+        </div>
+        <nav class="flex-1">
+            <a href="#" class="flex items-center px-6 py-3 hover:bg-purple-700">
+                <i class="fas fa-home mr-3"></i>
+                Inicio
+            </a>
+            <a href="#" class="flex items-center px-6 py-3 hover:bg-purple-700">
+                <i class="fas fa-clipboard-list mr-3"></i>
+                Denuncias Pendientes
+            </a>
+            <a href="#" class="flex items-center px-6 py-3 hover:bg-purple-700">
+                <i class="fas fa-check-circle mr-3"></i>
+                Denuncias Resueltas
+            </a>
+            <a href="#" class="flex items-center px-6 py-3 hover:bg-purple-700">
+                <i class="fas fa-chart-bar mr-3"></i>
+                Estadísticas
+            </a>
+            <a href="#" class="flex items-center px-6 py-3 hover:bg-purple-700">
+                <i class="fas fa-cog mr-3"></i>
+                Configuración
+            </a>
+        </nav>
+        <div class="px-6 mt-auto">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="w-full bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700">
+                    <i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 p-8">
+        <!-- Tarjetas de Estadísticas -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <i class="fas fa-exclamation-circle text-3xl text-red-500 mr-4"></i>
+                    <div>
+                        <h3 class="text-gray-500">Denuncias Pendientes</h3>
+                        <p class="text-2xl font-bold" th:text="${denunciasPendientes}">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <i class="fas fa-clock text-3xl text-yellow-500 mr-4"></i>
+                    <div>
+                        <h3 class="text-gray-500">En Proceso</h3>
+                        <p class="text-2xl font-bold" th:text="${denunciasEnProceso}">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <i class="fas fa-check-circle text-3xl text-green-500 mr-4"></i>
+                    <div>
+                        <h3 class="text-gray-500">Resueltas</h3>
+                        <p class="text-2xl font-bold" th:text="${denunciasResueltas}">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <i class="fas fa-chart-line text-3xl text-blue-500 mr-4"></i>
+                    <div>
+                        <h3 class="text-gray-500">Total Asignadas</h3>
+                        <p class="text-2xl font-bold" th:text="${totalDenuncias}">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Denuncias Pendientes -->
+        <div class="bg-white rounded-lg shadow mb-6">
+            <div class="p-6">
+                <h3 class="text-xl font-bold mb-4">Denuncias Pendientes de Revisión</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fecha</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Título</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Categoría</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ubicación</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                        <tr th:each="denuncia : ${denunciasPendientesList}">
+                            <td class="px-6 py-4" th:text="${denuncia.id}"></td>
+                            <td class="px-6 py-4" th:text="${denuncia.fecha}"></td>
+                            <td class="px-6 py-4" th:text="${denuncia.titulo}"></td>
+                            <td class="px-6 py-4" th:text="${denuncia.categoria}"></td>
+                            <td class="px-6 py-4" th:text="${denuncia.ubicacion}"></td>
+                            <td class="px-6 py-4">
+                                <div class="flex space-x-2">
+                                    <a th:href="@{'/denuncia/' + ${denuncia.id}}"
+                                       class="text-blue-600 hover:text-blue-900">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <button class="text-green-600 hover:text-green-900">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                    <button class="text-yellow-600 hover:text-yellow-900">
+                                        <i class="fas fa-clock"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actividad Reciente -->
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-6">
+                <h3 class="text-xl font-bold mb-4">Actividad Reciente</h3>
+                <div class="space-y-4">
+                    <div th:each="actividad : ${actividadReciente}" class="flex items-center">
+                        <div class="bg-blue-100 rounded-full p-3">
+                            <i class="fas fa-bell text-blue-500"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-gray-600" th:text="${actividad.descripcion}">Descripción de la actividad</p>
+                            <p class="text-sm text-gray-400" th:text="${actividad.fecha}">Fecha</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Funciones para manejar las acciones de las denuncias
+    function verDenuncia(id) {
+        window.location.href = '/denuncia/' + id;
+    }
+
+    function aprobarDenuncia(id) {
+        // Lógica para aprobar denuncia
+    }
+
+    function marcarEnProceso(id) {
+        // Lógica para marcar en proceso
+    }
+</script>
+</body>
+</html>

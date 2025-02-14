@@ -1,12 +1,15 @@
 package com.itsqmet.Denuncias.Servicios;
 
 
+import com.itsqmet.Denuncias.Entidades.ActividadReciente;
 import com.itsqmet.Denuncias.Entidades.Denuncia;
+import com.itsqmet.Denuncias.Repositorios.ActividadRecienteRepositorio;
 import com.itsqmet.Denuncias.Repositorios.DenunciaRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +18,9 @@ public class DenunciaServicio {
 
     @Autowired
     private DenunciaRepositorio denunciaRepositorio;
+
+    @Autowired
+    private ActividadRecienteRepositorio actividadRecienteRepositorio;
 
     // Método para mostrar todas las denuncias
     public List<Denuncia> mostrarDenuncias() {
@@ -44,4 +50,28 @@ public class DenunciaServicio {
     public Optional<Denuncia> buscarDenunciaPorId(String id) {
         return denunciaRepositorio.findById(id);
     }
+
+    public long contarDenunciasPorEstado(String estado) {
+        return denunciaRepositorio.countByEstado(estado);
+    }
+
+    public long contarDenunciasPorAutoridad(String autoridadId) {
+        return denunciaRepositorio.findByAutoridadId(autoridadId).size();
+    }
+
+    public List<Denuncia> obtenerDenunciasPendientes() {
+        return denunciaRepositorio.findByEstado("PENDIENTE");
+    }
+
+    public List<ActividadReciente> obtenerActividadReciente() {
+        return actividadRecienteRepositorio.findTop10ByOrderByFechaDesc();
+    }
+
+    // Método helper para registrar actividad
+    public void registrarActividad(String descripcion, String tipo, String denunciaId, String usuarioId) {
+        ActividadReciente actividad = new ActividadReciente(descripcion, tipo, denunciaId, usuarioId);
+        actividadRecienteRepositorio.save(actividad);
+    }
+
+
 }

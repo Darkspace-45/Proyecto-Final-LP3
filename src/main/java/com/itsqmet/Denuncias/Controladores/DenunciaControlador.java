@@ -19,6 +19,12 @@ public class DenunciaControlador {
     @Autowired
     private DenunciaServicio denunciaServicio;
 
+    @GetMapping("/")
+    public String Inicio() {
+
+        return "index";
+    }
+
     // Método para mostrar todas las denuncias
     @GetMapping("/denuncias")
     public String listarDenuncias(@RequestParam(name = "buscarDenuncia", required = false, defaultValue = "") String buscarDenuncia, Model model) {
