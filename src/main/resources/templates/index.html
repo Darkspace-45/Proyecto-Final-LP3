@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet"/>
+    <style>
+        /* Asegúrate de que los modales tengan un z-index alto */
+        #loginModal, #registerModal {
+            z-index: 1000; /* Valor alto para que esté por encima */
+        }
+        /* Si es necesario, puedes ajustar el z-index de la sección de presentación */
+        #presentation {
+            z-index: 1; /* Valor menor para que esté por debajo */
+        }
+    </style>
+</head>
+<body>
+
+<section>
+    <nav class="bg-white border-gray-200 dark:bg-gray-900 relative z-10">
+        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+            <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
+                <img th:src="@{Img/logo.png}" class="h-8" alt="Logo" style="filter: invert(1)"/>
+            </a>
+            <div class="flex md:order-2 space-x-2 md:space-x-1 rtl:space-x-reverse">
+                <button id="openRegisterModal" type="button"
+                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    Registrarse
+                </button>
+                <button id="openLoginModal" type="button"
+                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    Iniciar Sesión
+                </button>
+                <button data-collapse-toggle="navbar-cta" type="button"
+                        class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                        aria-controls="navbar-cta" aria-expanded="false">
+                    <span class="sr-only">Open main menu</span>
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                         viewBox="0 0 17 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M1 1h15M1 7h15M1 13h15"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-cta">
+                <ul class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+                    <li>
+                        <a th:href="@{/}"
+                           class="block py-2 px-3 md:p-0 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Inicio</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/Nosotros}"
+                           class="block py-2 px-3 md:p-0 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Nosotros</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/Denuncias}"
+                           class="block py-2 px-3 md:p-0 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Tipos
+                            de Denuncias</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/Reseñas}"
+                           class="block py-2 px-3 md:p-0 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Reseñas</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</section>
+
+<!-- Modal de Inicio de Sesión -->
+<div id="loginModal"
+     class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 transition-opacity duration-300 ease-in-out">
+    <div class="bg-white rounded-lg p-6 w-96 shadow-lg transform transition-all duration-300 ease-in-out scale-95 opacity-0"
+         id="loginModalContent">
+        <h2 class="text-lg font-bold mb-4 text-gray-800">Iniciar Sesión</h2>
+        <form>
+            <div class="mb-4">
+                <label for="loginEmail" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
+                <input type="email" id="loginEmail"
+                       class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500"
+                       required>
+            </div>
+            <div class="mb-4">
+                <label for="loginPassword" class="block text-sm font-medium text-gray-700">Contraseña</label>
+                <input type="password" id="loginPassword"
+                       class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500"
+                       required>
+            </div>
+            <button type="submit"
+                    class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200">
+                Iniciar Sesión
+            </button>
+        </form>
+        <button id="closeLoginModal" class="mt-4 text-red-500 hover:underline">Cerrar</button>
+    </div>
+</div>
+
+<!-- Modal de Registro -->
+<div id="registerModal"
+     class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 transition-opacity duration-300 ease-in-out">
+    <div class="bg-white rounded-lg p-6 w-96 shadow-lg transform transition-all duration-300 ease-in-out scale-95 opacity-0"
+         id="registerModalContent">
+        <h2 class="text-lg font-bold mb-4 text-gray-800">Registrarse</h2>
+        <form>
+            <div class="mb-4">
+                <label for="registerName" class="block text-sm font-medium text-gray-700">Nombre</label>
+                <input type="text" id="registerName"
+                       class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500"
+                       required>
+            </div>
+            <div class="mb-4">
+                <label for="registerEmail" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
+                <input type="email" id="registerEmail"
+                       class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500"
+                       required>
+            </div>
+            <div class="mb-4">
+                <label for="registerPassword" class="block text-sm font-medium text-gray-700">Contraseña</label>
+                <input type="password" id="registerPassword"
+                       class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500"
+                       required>
+            </div>
+            <button type="submit"
+                    class="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-200">
+                Registrarse
+            </button>
+        </form>
+        <button id="closeRegisterModal" class="mt-4 text-red-500 hover:underline">Cerrar</button>
+    </div>
+</div>
+
+<script>
+    document.getElementById('openLoginModal').onclick = function() {
+        document.getElementById('loginModal').classList.remove('hidden');
+        const modalContent = document.getElementById('loginModalContent');
+        modalContent.classList.remove('scale-95', 'opacity-0');
+        modalContent.classList.add('scale-100', 'opacity-100');
+    };
+    document.getElementById('closeLoginModal').onclick = function() {
+        const modalContent = document.getElementById('loginModalContent');
+        modalContent.classList.remove('scale-100', 'opacity-100');
+        modalContent.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => {
+            document.getElementById('loginModal').classList.add('hidden');
+        }, 300); // Espera a que la animación termine
+    };
+    document.getElementById('openRegisterModal').onclick = function() {
+        document.getElementById('registerModal').classList.remove('hidden');
+        const modalContent = document.getElementById('registerModalContent');
+        modalContent.classList.remove('scale-95', 'opacity-0');
+        modalContent.classList.add('scale-100', 'opacity-100');
+    };
+    document.getElementById('closeRegisterModal').onclick = function() {
+        const modalContent = document.getElementById('registerModalContent');
+        modalContent.classList.remove('scale-100', 'opacity-100');
+        modalContent.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => {
+            document.getElementById('registerModal').classList.add('hidden');
+        }, 300); // Espera a que la animación termine
+    };
+</script>
+
+<!-- Presentación -->
+<section id="presentation"
+         class="bg-cover bg-no-repeat bg-[url('https://agenciadecontrol.quito.gob.ec/images/01_boton_01.png')] bg-gray-700 bg-blend-multiply">
+    <div class="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16 z-10 relative">
+        <a href="#"
+           class="inline-flex justify-between items-center py-1 px-1 pe-4 mb-7 text-sm text-blue-700 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800">
+            <span class="text-xs bg-blue-600 rounded-full text-white px-4 py-1.5 me-3">Nuevo</span> <span
+                class="text-sm font-medium">Disfruta de funciones que vayan apareciendo poco a poco</span>
+            <svg class="w-2.5 h-2.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                 fill="none" viewBox="0 0 6 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="m1 9 4-4-4-4"/>
+            </svg>
+        </a>
+        <h1 class="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+            CivicWatch</h1>
+        <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48 dark:text-gray-200">Haciendo tu
+            vida mucho más segura.</p>
+        <form class="w-full max-w-md mx-auto">
+            <label for="default-email" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Email
+                sign-up</label>
+            <div class="relative">
+                <div class="absolute inset-y-0 rtl:inset-x-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                         xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16">
+                        <path d="m10.036 8.278 9.258-7.79A1.979 1.979 0 0 0 18 0H2A1.987 1.987 0 0 0 .641.541l9.395 7.737Z"/>
+                        <path d="M11.241 9.817c-.36.275-.801.425-1.255.427-.428 0-.845-.138-1.187-.395L0 2.6V14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2.5l-8.759 7.317Z"/>
+                    </svg>
+                </div>
+                <input type="email" id="default-email"
+                       class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                       placeholder="Enter your email here..." required/>
+                <button type="submit"
+                        class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    Sign up
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="bg-gradient-to-b from-blue-50 to-transparent dark:from-blue-900 w-full h-full absolute top-0 left-0 z-0"></div>
+</section>
+
+<!-- Denuncias Recientes -->
+<section id="denuncias" class="py-16 bg-blue-50">
+    <div class="container mx-auto text-center px-4">
+        <h2 class="text-4xl font-semibold text-blue-900 mb-8">Denuncias Recientes</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
+            <!-- Denuncia 1 -->
+            <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+                <img th:src="@{/Img/denuncia1.jpg}" alt="Denuncia 1"
+                     class="rounded-t-lg w-full h-48 object-cover mb-4">
+                <div class="p-5">
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Denuncia sobre
+                        corrupción en la alcaldía</h5>
+                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Descripción breve de la denuncia sobre
+                        un caso de corrupción en la alcaldía. Asegúrese de presentar todos los detalles relevantes para
+                        que sea tomada en cuenta por las autoridades.</p>
+                    <a th:href="@{/ Denuncias}"
+                       class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        Hacer Denuncia
+                        <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true"
+                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Denuncia 2 -->
+            <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+                <img th:src="@{/Img/denuncia2.jfif}" alt="Denuncia 2"
+                     class="rounded-t-lg w-full h-48 object-cover mb-4">
+                <div class="p-5">
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Irregularidades
+                        en la construcción de un puente</h5>
+                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Una denuncia sobre la construcción de
+                        un puente que no cumple con los estándares de seguridad. El denunciante presenta pruebas
+                        documentales y fotográficas.</p>
+                    <a th:href="@{/Denuncias}"
+                       class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        Hacer Denuncia
+                        <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true"
+                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Denuncia 3 -->
+            <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+                <img th:src="@{/Img/denuncia3.webp}" alt="Denuncia 3"
+                     class="rounded-t-lg w-full h-48 object-cover mb-4">
+                <div class="p-5">
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Maltrato animal
+                        en un refugio</h5>
+                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Una denuncia sobre maltrato animal en
+                        un refugio local. Se incluyen testimonios y pruebas visuales de los hechos denunciados.
+                        Están a la espera de que se solucione lo más pronto posible.</p>
+                    <a th:href="@{/Denuncias}"
+                       class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        Hacer Denuncia
+                        <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true"
+                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Sección de Misión y Visión -->
+<section id="mision" class="py-16 bg-white">
+    <div class="container mx-auto text-center px-4">
+        <h2 class="text-4xl font-semibold text-blue-900 mb-4">Misión y Visión</h2>
+        <div class="flex justify-center items-center space-x-12">
+            <br>
+            <br>
+
+            <!-- Misión -->
+            <div class="w-1/2 bg-blue-50 p-8 rounded-lg shadow-lg border border-blue-300">
+                <h3 class="text-2xl font-semibold text-blue-900 mb-4">Misión</h3>
+                <p class="text-lg text-gray-700">Nuestra misión es promover la transparencia y justicia social a través
+                    de las denuncias públicas. Estamos comprometidos con la lucha contra la corrupción y fomentamos la
+                    participación ciudadana para lograr un cambio positivo en nuestra sociedad.</p>
+            </div>
+
+            <!-- Visión -->
+            <div class="w-1/2 p-8 bg-gray-800 border border-gray-700 rounded-lg shadow-lg">
+                <h3 class="text-2xl font-semibold text-white mb-4">Visión</h3>
+                <p class="text-lg text-gray-300">Ser un referente en la lucha contra la corrupción y promover una
+                    sociedad más justa y equitativa. Trabajamos para que cada voz sea escuchada y que las denuncias
+                    puedan transformar positivamente las comunidades.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Sección de Servicios -->
+<section id="servicios" class="py-16 bg-white">
+    <div class="container mx-auto text-center px-4">
+        <h2 class="text-4xl font-semibold text-blue-900 mb-4">Servicios</h2>
+        <p class="text-lg text-gray-700 mb-12">Ofrecemos diversos servicios para apoyar la denuncia pública y promover
+            un cambio en nuestra comunidad.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
+            <!-- Servicio 1 -->
+            <div class="bg-blue-50 p-8 rounded-lg shadow-lg border border-blue-300">
+                <i class="fas fa-bullhorn text-4xl text-blue-900 mb-4"></i>
+                <h3 class="text-2xl font-semibold text-blue-900 mb-4">Denuncia Anónima</h3>
+                <p class="text-gray-700">Permite a los ciudadanos presentar denuncias sin revelar su identidad,
+                    garantizando su privacidad y seguridad.</p>
+            </div>
+
+            <!-- Servicio 2 -->
+            <div class="p-8 bg-gray-800 border border-gray-700 rounded-lg shadow-lg">
+                <i class="fas fa-users text-4xl text-white mb-4"></i>
+                <h3 class="text-2xl font-semibold text-white mb-4">Participación Comunitaria</h3>
+                <p class="text-gray-300">Brindamos una plataforma para que la comunidad participe activamente en la
+                    resolución de problemas locales.</p>
+            </div>
+
+            <!-- Servicio 3 -->
+            <div class="bg-blue-50 p-8 rounded-lg shadow-lg border border-blue-300">
+                <i class="fas fa-gavel text-4xl text-blue-900 mb-4"></i>
+                <h3 class="text-2xl font-semibold text-blue-900 mb-4">Asesoría Legal</h3>
+                <p class="text-gray-700">Ofrecemos orientación legal a quienes deseen llevar su denuncia a instancias
+                    legales para garantizar que se haga justicia.</p>
+            </div>
+
+            <!-- Servicio 4 -->
+            <div class="p-8 bg-gray-800 border border-gray-700 rounded-lg shadow-lg">
+                <i class="fas fa-search text-4xl text-white mb-4"></i>
+                <h3 class="text-2xl font-semibold text-white mb-4">Investigación y Seguimiento</h3>
+                <p class="text-gray-300">Realizamos un seguimiento exhaustivo de cada denuncia para asegurar que las
+                    autoridades actúen conforme a la ley.</p>
+            </div>
+
+            <!-- Servicio 5 -->
+            <div class="bg-blue-50 p-8 rounded-lg shadow-lg border border-blue-300">
+                <i class="fas fa-clipboard-list text-4xl text-blue-900 mb-4"></i>
+                <h3 class="text-2xl font-semibold text-blue-900 mb-4">Reportes y Estadísticas</h3>
+                <p class="text-gray-700">Generamos informes detallados y estadísticas de las denuncias para visibilizar
+                    los problemas más comunes en la sociedad.</p>
+            </div>
+
+            <!-- Servicio 6 -->
+            <div class="p-8 bg-gray-800 border border-gray-700 rounded-lg shadow-lg">
+                <i class="fas fa-comments text-4xl text-white mb-4"></i>
+                <h3 class="text-2xl font-semibold text-white mb-4">Red de Apoyo</h3>
+                <p class="text-gray-300">Creamos una red de apoyo para aquellos que enfrentan problemas debido a sus
+                    denuncias, brindando orientación y asistencia.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-white rounded-lg shadow-sm m-4 dark:bg-gray-800">
+    <div class="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
+      <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2025 <a th:href="@{/}"
+                                                                                      class="hover:underline">CivicWatch™</a>. Todos los derechos reservados.
+    </span>
+        <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
+            <li>
+                <a href="#" class="hover:underline me-4 md:me-6">About</a>
+            </li>
+            <li>
+                <a href="#" class="hover:underline me-4 md:me-6">Privacy Policy</a>
+            </li>
+            <li>
+                <a href="#" class="hover:underline me-4 md:me-6">Licensing</a>
+            </li>
+            <li>
+                <a href="#" class="hover:underline">Contact</a>
+            </li>
+        </ul>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+</body>
+</html>

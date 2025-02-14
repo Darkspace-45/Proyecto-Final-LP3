@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reseñas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@1.7.2/dist/flowbite.js"></script>
+    <link rel="stylesheet" th:href="@{/css/Justificado.css}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+<section>
+    <nav class="bg-white border-gray-200 dark:bg-gray-900 relative z-10">
+        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+            <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
+                <img th:src="@{Img/logo.png}" class="h-8" alt="Logo" style="filter: invert(1)"/>
+            </a>
+            <div class="flex md:order-2 space-x-2 md:space-x-1 rtl:space-x-reverse">
+                <button id="openRegisterModal" type="button"
+                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    Registrarse
+                </button>
+                <button id="openLoginModal" type="button"
+                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    Iniciar Sesión
+                </button>
+                <button data-collapse-toggle="navbar-cta" type="button"
+                        class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                        aria-controls="navbar-cta" aria-expanded="false">
+                    <span class="sr-only">Open main menu</span>
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                         viewBox="0 0 17 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M1 1h15M1 7h15M1 13h15"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-cta">
+                <ul class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+                    <li>
+                        <a th:href="@{/}"
+                           class="block py-2 px-3 md:p-0 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Inicio</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/Nosotros}"
+                           class="block py-2 px-3 md:p-0 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Nosotros</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/Denuncias}"
+                           class="block py-2 px-3 md:p-0 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Tipos
+                            de Denuncias</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/Reseñas}"
+                           class="block py-2 px-3 md:p-0 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Reseñas</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</section>
+
+<!-- Modal de Inicio de Sesión -->
+<div id="loginModal"
+     class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 transition-opacity duration-300 ease-in-out">
+    <div class="bg-white rounded-lg p-6 w-96 shadow-lg transform transition-all duration-300 ease-in-out scale-95 opacity-0"
+         id="loginModalContent">
+        <h2 class="text-lg font-bold mb-4 text-gray-800">Iniciar Sesión</h2>
+        <form>
+            <div class="mb-4">
+                <label for="loginEmail" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
+                <input type="email" id="loginEmail"
+                       class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500"
+                       required>
+            </div>
+            <div class="mb-4">
+                <label for="loginPassword" class="block text-sm font-medium text-gray-700">Contraseña</label>
+                <input type="password" id="loginPassword"
+                       class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500"
+                       required>
+            </div>
+            <button type="submit"
+                    class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200">
+                Iniciar Sesión
+            </button>
+        </form>
+        <button id="closeLoginModal" class="mt-4 text-red-500 hover:underline">Cerrar</button>
+    </div>
+</div>
+
+<!-- Modal de Registro -->
+<div id="registerModal"
+     class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 transition-opacity duration-300 ease-in-out">
+    <div class="bg-white rounded-lg p-6 w-96 shadow-lg transform transition-all duration-300 ease-in-out scale-95 opacity-0"
+         id="registerModalContent">
+        <h2 class="text-lg font-bold mb-4 text-gray-800">Registrarse</h2>
+        <form>
+            <div class="mb-4">
+                <label for="registerName" class="block text-sm font-medium text-gray-700">Nombre</label>
+                <input type="text" id="registerName"
+                       class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500"
+                       required>
+            </div>
+            <div class="mb-4">
+                <label for="registerEmail" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
+                <input type="email" id="registerEmail"
+                       class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500"
+                       required>
+            </div>
+            <div class="mb-4">
+                <label for="registerPassword" class="block text-sm font-medium text-gray-700">Contraseña</label>
+                <input type="password" id="registerPassword"
+                       class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500"
+                       required>
+            </div>
+            <button type="submit"
+                    class="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-200">
+                Registrarse
+            </button>
+        </form>
+        <button id="closeRegisterModal" class="mt-4 text-red-500 hover:underline">Cerrar</button>
+    </div>
+</div>
+
+<script>
+    document.getElementById('openLoginModal').onclick = function() {
+        document.getElementById('loginModal').classList.remove('hidden');
+        const modalContent = document.getElementById('loginModalContent');
+        modalContent.classList.remove('scale-95', 'opacity-0');
+        modalContent.classList.add('scale-100', 'opacity-100');
+    };
+    document.getElementById('closeLoginModal').onclick = function() {
+        const modalContent = document.getElementById('loginModalContent');
+        modalContent.classList.remove('scale-100', 'opacity-100');
+        modalContent.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => {
+            document.getElementById('loginModal').classList.add('hidden');
+        }, 300); // Espera a que la animación termine
+    };
+    document.getElementById('openRegisterModal').onclick = function() {
+        document.getElementById('registerModal').classList.remove('hidden');
+        const modalContent = document.getElementById('registerModalContent');
+        modalContent.classList.remove('scale-95', 'opacity-0');
+        modalContent.classList.add('scale-100', 'opacity-100');
+    };
+    document.getElementById('closeRegisterModal').onclick = function() {
+        const modalContent = document.getElementById('registerModalContent');
+        modalContent.classList.remove('scale-100', 'opacity-100');
+        modalContent.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => {
+            document.getElementById('registerModal').classList.add('hidden');
+        }, 300); // Espera a que la animación termine
+    };
+</script>
+<br>
+<br>
+<br>
+<div class="text-center mb-10">
+    <h1 class="text-3xl font-bold text-gray-800">Reseñas de CivicWatch</h1>
+    <p class="text-gray-600">¡Tu voz importa! Lee las opiniones de otros ciudadanos y agrega tu propia reseña.</p>
+</div>
+
+<!-- Contenedor de Reseñas -->
+<div id="review-container" class="flex flex-col items-center space-y-6 justify-center">
+    <!-- Reseñas existentes aquí -->
+    <!-- Reseña 1 -->
+    <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
+        <div class="flex items-center mb-4">
+            <img src="https://www.w3schools.com/w3images/avatar2.png" alt="Avatar" class="w-12 h-12 rounded-full mr-4">
+            <div>
+                <h2 class="font-semibold text-gray-800">Carlos López</h2>
+                <p class="text-sm text-gray-500">Hace 3 días</p>
+            </div>
+        </div>
+        <p class="text-gray-700 mb-4">
+            La plataforma de denuncias funciona muy bien. He podido reportar varios problemas de infraestructura en mi
+            ciudad y han tomado acción rápidamente.
+        </p>
+    </div>
+    <!-- Más reseñas... -->
+</div>
+
+<!-- Botón para agregar nueva reseña -->
+<div class="mt-10 text-center">
+    <button class="bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-700" onclick="toggleModal('add-review-modal')">
+        <i class="fas fa-plus"></i> Agregar Nueva Reseña
+    </button>
+</div>
+
+<!-- Modal para agregar una nueva reseña -->
+<div id="add-review-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-1/3">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Agregar Nueva Reseña</h3>
+        <form id="review-form" onsubmit="addReview(event)">
+            <div class="mb-4">
+                <label for="name" class="block text-gray-700">Nombre</label>
+                <input type="text" id="name" class="w-full p-2 border rounded-md" placeholder="Tu nombre" required>
+            </div>
+            <div class="mb-4">
+                <label for="review" class="block text-gray-700">Reseña</label>
+                <textarea id="review" class="w-full p-2 border rounded-md" rows="4" placeholder="Escribe tu reseña..."
+                          required></textarea>
+            </div>
+            <div class="flex justify-end space-x-4">
+                <button type="button" class="text-gray-500 hover:text-gray-700"
+                        onclick="toggleModal('add-review-modal')">Cerrar
+                </button>
+                <button type="submit" class="bg-blue-500 text-white p-2 rounded-md">Enviar Reseña</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function toggleModal(modalId) {
+        const modal = document.getElementById(modalId);
+        modal.classList.toggle('hidden');
+    }
+
+    function addReview(event) {
+        event.preventDefault(); // Evita el envío del formulario
+
+        // Captura los valores del formulario
+        const name = document.getElementById('name').value;
+        const reviewText = document.getElementById('review').value;
+
+        // Crea un nuevo elemento de reseña
+        const reviewContainer = document.getElementById('review-container');
+        const newReview = document.createElement('div');
+        newReview.className = 'bg-white p-6 rounded-lg shadow-md w-full max-w-md';
+        newReview.innerHTML = `
+            <div class="flex items-center mb-4">
+                <img src="https://www.w3schools.com/w3images/avatar2.png" alt="Avatar" class="w-12 h-12 rounded-full mr-4">
+                <div>
+                    <h2 class="font-semibold text-gray-800">${name}</h2>
+                    <p class="text-sm text-gray-500">Hace unos momentos</p>
+                </div>
+            </div>
+            <p class="text-gray-700 mb-4">${reviewText}</p>
+        `;
+
+        // Agrega la nueva reseña al contenedor de reseñas
+        reviewContainer.prepend(newReview); // Agrega la nueva reseña al inicio
+
+        // Limpia el formulario
+        document.getElementById('review-form').reset();
+
+        // Cierra el modal
+        toggleModal('add-review-modal');
+    }
+</script>
+<br>
+<br>
+<footer class="bg-white rounded-lg shadow-sm m-4 dark:bg-gray-800">
+    <div class="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
+      <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2025 <a th:href="@{/}"
+                                                                                      class="hover:underline">CivicWatch™</a>. Todos los derechos reservados.
+    </span>
+        <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
+            <li>
+                <a href="#" class="hover:underline me-4 md:me-6">About</a>
+            </li>
+            <li>
+                <a href="#" class="hover:underline me-4 md:me-6">Privacy Policy</a>
+            </li>
+            <li>
+                <a href="#" class="hover:underline me-4 md:me-6">Licensing</a>
+            </li>
+            <li>
+                <a href="#" class="hover:underline">Contact</a>
+            </li>
+        </ul>
+    </div>
+</footer>
+<!-- Script para mostrar y ocultar el modal -->
+<script>
+    const toggleModal = (id) => {
+        const modal = document.getElementById(id);
+        modal.classList.toggle('hidden');
+    }
+</script>
+<!-- Flowbite JS -->
+<script src="https://cdn.jsdelivr.net/npm/flowbite@1.6.3/dist/flowbite.min.js"></script>
+</body>
+</html>

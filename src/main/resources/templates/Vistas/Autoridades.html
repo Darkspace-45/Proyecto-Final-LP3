@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Autoridades</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@1.7.2/dist/flowbite.css" rel="stylesheet">
+</head>
+<body class="bg-blue-50">
+
+<nav class="bg-blue-900 p-4">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <a href="#" class="text-white text-2xl font-bold">Acción Ciudadana</a>
+        <div class="space-x-4">
+            <a th:href="@{/}" class="text-white">Inicio</a>
+            <a th:href="@{/Nosotros}" class="text-white">Nosotros</a>
+            <a th:href="@{/Denuncias}" class="text-white">Tipos Denuncia</a>
+            <a th:href="@{/Reseñas}" class="text-white">Reseñas</a>
+        </div>
+    </div>
+</nav>
+
+<div class="max-w-7xl mx-auto bg-white p-6 rounded-lg shadow-md mt-10">
+    <h2 class="text-2xl font-bold mb-4">Lista de Autoridades</h2>
+    <table class="min-w-full bg-white">
+        <thead>
+        <tr>
+            <th class="py-2 px-4 border-b">ID</th>
+            <th class="py-2 px-4 border-b">Nombre</th>
+            <th class="py-2 px-4 border-b">Cargo</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="autoridad : ${autoridades}">
+            <td class="py-2 px-4 border-b" th:text="${autoridad.id}">ID</td>
+            <td class="py-2 px-4 border-b" th:text="${autoridad.nombre}">Nombre de la autoridad</td>
+            <td class="py-2 px-4 border-b" th:text="${autoridad.cargo}">Cargo de la autoridad</td>
+            <td>
+                <a th:href="@{/eliminarAutoridad/} + ${autoridad.id}">Eliminar</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div th:if="${#lists.isEmpty(autoridades)}" class="mt-4">
+        <p>No hay autoridades registradas.</p>
+    </div>
+</div>
+
+<!-- Botones de navegación -->
+<div class="max-w-7xl mx-auto mt-6 flex justify-center space-x-4">
+    <a th:href="@{/formAutoridad}" class="bg-green-500 text-white font-bold py-2 px-4 rounded-md hover:bg-green-600">Nueva
+        Autoridad</a>
+    <a th:href="@{/denuncias}"
+       class="bg-blue-500 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-600">Denuncias</a>
+    <a th:href="@{/denunciantes}" class="bg-green-500 text-white font-bold py-2 px-4 rounded-md hover:bg-green-600">Denunciantes</a>
+</div>
+
+</body>
+</html>
