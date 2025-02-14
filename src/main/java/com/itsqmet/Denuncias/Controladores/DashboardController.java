@@ -2,68 +2,57 @@ package com.itsqmet.Denuncias.Controladores;
 
 import com.itsqmet.Denuncias.Servicios.DenunciaServicio;
 import com.itsqmet.Denuncias.Servicios.DenuncianteServicio;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
+@RequiredArgsConstructor
 public class DashboardController {
 
-    @Autowired
-    private DenunciaServicio denunciaServicio;
+    private final DenunciaServicio denunciaServicio;
 
-    @Autowired
-    private DenuncianteServicio denuncianteServicio;
+    private final DenuncianteServicio denuncianteServicio;
 
     @GetMapping("/dashboard")
     public String dashboard(Authentication authentication, Model model) {
-        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-            return "dashboard/admin";
-        } else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_DENUNCIANTE"))) {
-            return "dashboard/denunciante";
-        } else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_AUTORIDAD"))) {
-            String autoridadId = authentication.getName();
+        // Obtener el rol del usuario
+        String role = authentication.getAuthorities().stream()
+                .findFirst()
+                .map(GrantedAuthority::getAuthority)
+                .orElse("");
 
-            model.addAttribute("denunciasPendientes",
-                    denunciaServicio.contarDenunciasPorEstado("PENDIENTE"));
-            model.addAttribute("denunciasEnProceso",
-                    denunciaServicio.contarDenunciasPorEstado("EN_PROCESO"));
-            model.addAttribute("denunciasResueltas",
-                    denunciaServicio.contarDenunciasPorEstado("RESUELTO"));
-            model.addAttribute("totalDenuncias",
-                    denunciaServicio.contarDenunciasPorAutoridad(autoridadId));
+        // Redirigir según el rol
+        switch (role) {
+            case "ROLE_ADMIN":
+                model.addAttribute("totalDenuncias", denunciaServicio.mostrarDenuncias().size());
+                model.addAttribute("ultimasDenuncias", denunciaServicio.mostrarDenuncias());
+                return "dashboard/admin";
 
-            // Lista de denuncias pendientes
-            model.addAttribute("denunciasPendientesList",
-                    denunciaServicio.obtenerDenunciasPendientes());
+            case "ROLE_DENUNCIANTE":
+                String username = authentication.getName();
+                model.addAttribute("misDenuncias",
+                        denunciaServicio.findByDenuncianteId(username));
+                return "dashboard/denunciante";
 
-            return "dashboard/autoridad";
+            case "ROLE_AUTORIDAD":
+                String autoridadId = authentication.getName();
+                model.addAttribute("denunciasPendientes",
+                        denunciaServicio.contarDenunciasPorEstado("PENDIENTE"));
+                model.addAttribute("denunciasEnProceso",
+                        denunciaServicio.contarDenunciasPorEstado("EN_PROCESO"));
+                model.addAttribute("denunciasResueltas",
+                        denunciaServicio.contarDenunciasPorEstado("RESUELTO"));
+                model.addAttribute("totalDenuncias",
+                        denunciaServicio.contarDenunciasPorAutoridad(autoridadId));
+                return "dashboard/autoridad";
+
+            default:
+                return "redirect:/auth/login";
         }
-
-        return "redirect:/login";
-    }
-
-    @GetMapping("/dashboard/autoridad")
-    public String autoridadDashboard(Model model, Authentication authentication) {
-        // Obtener el ID de la autoridad actual
-        String autoridadId = authentication.getName();
-
-        // Agregar datos al modelo
-        model.addAttribute("denunciasPendientes", denunciaServicio.contarDenunciasPorEstado("PENDIENTE"));
-        model.addAttribute("denunciasEnProceso", denunciaServicio.contarDenunciasPorEstado("EN_PROCESO"));
-        model.addAttribute("denunciasResueltas", denunciaServicio.contarDenunciasPorEstado("RESUELTO"));
-        model.addAttribute("totalDenuncias", denunciaServicio.contarDenunciasPorAutoridad(autoridadId));
-
-        // Lista de denuncias pendientes
-        model.addAttribute("denunciasPendientesList", denunciaServicio.obtenerDenunciasPendientes());
-
-        // Actividad reciente
-        model.addAttribute("actividadReciente", denunciaServicio.obtenerActividadReciente());
-
-        return "dashboard/autoridad";
     }
 
 }

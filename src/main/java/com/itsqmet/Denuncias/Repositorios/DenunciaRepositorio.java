@@ -7,13 +7,8 @@ import java.util.List;
 
 public interface DenunciaRepositorio extends MongoRepository<Denuncia, String> {
     List<Denuncia> findByTituloContainingIgnoreCase(String titulo);
-
+    List<Denuncia> findByDenuncianteId(String denuncianteId);
     long countByEstado(String estado);
-
     List<Denuncia> findByEstado(String estado);
-
-    // Para el dashboard de autoridad
-    long countByAutoridadIdAndEstado(String autoridadId, String estado);
-
     List<Denuncia> findByAutoridadId(String autoridadId);
 }
