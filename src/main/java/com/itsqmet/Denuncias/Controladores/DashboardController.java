@@ -14,18 +14,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class DashboardController {
 
     private final DenunciaServicio denunciaServicio;
-
     private final DenuncianteServicio denuncianteServicio;
 
     @GetMapping("/dashboard")
     public String dashboard(Authentication authentication, Model model) {
-        // Obtener el rol del usuario
         String role = authentication.getAuthorities().stream()
                 .findFirst()
                 .map(GrantedAuthority::getAuthority)
                 .orElse("");
 
-        // Redirigir según el rol
         switch (role) {
             case "ROLE_ADMIN":
                 model.addAttribute("totalDenuncias", denunciaServicio.mostrarDenuncias().size());
@@ -34,8 +31,23 @@ public class DashboardController {
 
             case "ROLE_DENUNCIANTE":
                 String username = authentication.getName();
-                model.addAttribute("misDenuncias",
-                        denunciaServicio.findByDenuncianteId(username));
+                // Obtener todas las denuncias del denunciante
+                var denuncias = denunciaServicio.findByDenuncianteId(username);
+
+                // Contar denuncias por estado
+                long denunciasResueltas = denuncias.stream()
+                        .filter(d -> "RESUELTO".equals(d.getEstado()))
+                        .count();
+                long denunciasProceso = denuncias.stream()
+                        .filter(d -> "EN_PROCESO".equals(d.getEstado()))
+                        .count();
+
+                // Agregar todos los datos al modelo
+                model.addAttribute("misDenuncias", denuncias);
+                model.addAttribute("totalDenuncias", denuncias.size());
+                model.addAttribute("denunciasResueltas", denunciasResueltas);
+                model.addAttribute("denunciasProceso", denunciasProceso);
+
                 return "dashboard/denunciante";
 
             case "ROLE_AUTORIDAD":
@@ -48,11 +60,12 @@ public class DashboardController {
                         denunciaServicio.contarDenunciasPorEstado("RESUELTO"));
                 model.addAttribute("totalDenuncias",
                         denunciaServicio.contarDenunciasPorAutoridad(autoridadId));
+                model.addAttribute("denunciasPendientesList",
+                        denunciaServicio.obtenerDenunciasPendientes());
                 return "dashboard/autoridad";
 
             default:
                 return "redirect:/auth/login";
         }
     }
-
 }
