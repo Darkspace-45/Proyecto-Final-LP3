@@ -1,55 +1,23 @@
 package com.itsqmet.Denuncias.Entidades;
 
+import com.itsqmet.Denuncias.Rol.Rol;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Collection;
-import java.util.List;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "denunciantes")
-public class Denunciante implements UserDetails {
+public class Denunciante {
     @Id
     private String id;
     private String username;
     private String password;
     private String nombre;
-    private Role role;
+    private Rol rol;
     private String correo;
-    private boolean enabled = true;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
 
     public String getId() {
         return id;
@@ -72,7 +40,8 @@ public class Denunciante implements UserDetails {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        BCryptPasswordEncoder encoder= new BCryptPasswordEncoder();
+        this.password = encoder.encode(password);
     }
 
     public String getNombre() {
@@ -83,12 +52,12 @@ public class Denunciante implements UserDetails {
         this.nombre = nombre;
     }
 
-    public Role getRole() {
-        return role;
+    public Rol getRol() {
+        return rol;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRol(Rol rol) {
+        this.rol = rol;
     }
 
     public String getCorreo() {
@@ -99,7 +68,4 @@ public class Denunciante implements UserDetails {
         this.correo = correo;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
 }

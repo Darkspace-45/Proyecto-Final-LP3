@@ -29,10 +29,6 @@ public class AuthController {
 
     @PostMapping("/register")
     public String processRegister(Denunciante denunciante) {
-        // Encriptar la contraseña
-        denunciante.setPassword(passwordEncoder.encode(denunciante.getPassword()));
-        denunciante.setEnabled(true);
-
         // Guardar el usuario
         denuncianteServicio.guardarDenunciante(denunciante);
 

@@ -59,4 +59,15 @@ public class DenuncianteControlador {
         denuncianteServicio.eliminarDenunciante(id);
         return "redirect:/denunciantes";
     }
+
+    @GetMapping("/actualizarDenunciante/{id}")
+    public String actualizarDenunciante(@PathVariable String id, Model model) {
+        Optional<Denunciante> denunciante = denuncianteServicio.buscarDenunciantePorID(id);
+        if (denunciante.isPresent()) {
+            model.addAttribute("denunciante", denunciante.get());
+            return "Denunciante/formularioDenunciante";
+        } else {
+            return "redirect:/denunciantes";
+        }
+    }
 }
